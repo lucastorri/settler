@@ -1,7 +1,8 @@
 package com.unstablebuild.settler
 
-import com.unstablebuild.settler.annotation.Renamed
+import com.unstablebuild.settler.annotation.Key
 import com.unstablebuild.settler.config.ConfigProvider
+import com.unstablebuild.settler.error.SettlerException
 import com.unstablebuild.settler.model.MemorySize
 
 import scala.concurrent.duration.Duration
@@ -15,12 +16,13 @@ object Macros {
 
     val tpe = weakTypeOf[T]
     val self = typeOf[Macros.type].decl(TermName("generate")).asMethod
+    val error = typeOf[SettlerException]
 
     val definitions = tpe.decls.collect {
       case m: MethodSymbol if m.isAbstract =>
 
         def conf = m.annotations
-          .find(_.tree.tpe =:= typeOf[Renamed])
+          .find(_.tree.tpe =:= typeOf[Key])
           .map(_.tree)
           .collectFirst {
             case q"new $_(name = $name)" => name.toString
@@ -108,7 +110,7 @@ object Macros {
           try {
             ${c.Expr(extract(m.returnType))}
           } catch {
-            case scala.util.control.NonFatal(e) => throw com.unstablebuild.settler.error.SettlerException(cause = e)
+            case scala.util.control.NonFatal(e) => throw new $error(cause = e)
           }
         """
     }

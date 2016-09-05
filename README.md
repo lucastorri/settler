@@ -61,7 +61,7 @@ To use it with [SBT](http://www.scala-sbt.org/), add the following to your `buil
 ```scala
 resolvers += Resolver.sonatypeRepo("public")
 
-libraryDependencies += "com.unstablebuild" %% "settler" % "0.3.1"
+libraryDependencies += "com.unstablebuild" %% "settler" % "0.3.2"
 ```
 
 

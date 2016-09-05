@@ -1,7 +1,7 @@
 package com.unstablebuild.settler
 
 import com.typesafe.config.ConfigFactory
-import com.unstablebuild.settler.annotation.Renamed
+import com.unstablebuild.settler.annotation.Key
 import com.unstablebuild.settler.error.SettlerException
 import org.scalatest.{FlatSpec, MustMatchers}
 
@@ -111,7 +111,7 @@ trait A {
 
   def aNumber: Boolean
 
-  @Renamed(name = "another-name")
+  @Key(name = "another-name")
   def renamed: Double
 
 }
