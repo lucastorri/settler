@@ -1,6 +1,7 @@
 package com.unstablebuild.settler
 
 import com.typesafe.config.ConfigFactory
+import com.unstablebuild.settler.annotation.Renamed
 import com.unstablebuild.settler.error.SettlerException
 import org.scalatest.{FlatSpec, MustMatchers}
 
@@ -31,6 +32,7 @@ class SettlerTest extends FlatSpec with MustMatchers {
             |  }
             |]
             |aNumber = 37
+            |another-name = 1.23
           """.stripMargin))
 
   it must "handle integers" in {
@@ -77,6 +79,10 @@ class SettlerTest extends FlatSpec with MustMatchers {
     }
   }
 
+  it must "allow setting the base name" in {
+    settings.renamed must equal (1.23)
+  }
+
 }
 
 trait A {
@@ -104,6 +110,9 @@ trait A {
   def pairSet: Set[C]
 
   def aNumber: Boolean
+
+  @Renamed(name = "another-name")
+  def renamed: Double
 
 }
 

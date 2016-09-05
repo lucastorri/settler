@@ -1,5 +1,6 @@
 package com.unstablebuild.settler
 
+import com.unstablebuild.settler.annotation.Renamed
 import com.unstablebuild.settler.config.ConfigProvider
 import com.unstablebuild.settler.model.MemorySize
 
@@ -17,7 +18,14 @@ object Macros {
 
     val definitions = tpe.decls.collect {
       case m: MethodSymbol if m.isAbstract =>
-        val conf = m.name.toString
+
+        def conf = m.annotations
+          .find(_.tree.tpe =:= typeOf[Renamed])
+          .map(_.tree)
+          .collectFirst {
+            case q"new $_(name = $name)" => name.toString
+          }
+          .getOrElse(m.asMethod.name.toString)
 
         def extract(base: Type): Tree = base match {
 
