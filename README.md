@@ -9,7 +9,7 @@ It is inspired by [`owner`](https://github.com/lviggiano/owner).
 
 Given a configuration file like this:
 
-```json
+```
 {
   str: "hello world",
   dbs: [
