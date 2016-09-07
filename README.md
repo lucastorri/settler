@@ -69,6 +69,6 @@ libraryDependencies += "com.unstablebuild" %% "settler" % "0.3.2"
 
 ```bash
 ./sbt test
-./sbt publishSigned
+./sbt publishSigned macros/publishSigned
 ./sbt sonatypeReleaseAll
 ```
