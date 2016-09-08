@@ -40,7 +40,7 @@ class SettlerTest extends FlatSpec with MustMatchers {
             |  }
             |]
             |aNumber = 37
-            |another-name = 1.23
+            |anotherName = 1.23
             |camel-case-to-dash-separated = 67
           """.stripMargin))
 
@@ -128,7 +128,7 @@ trait A {
 
   def aNumber: Boolean
 
-  @Key(name = "another-name")
+  @Key(name = "anotherName")
   def renamed: Double
 
   def camelCaseToDashSeparated: Int
