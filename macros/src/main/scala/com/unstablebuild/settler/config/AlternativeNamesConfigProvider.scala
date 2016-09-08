@@ -46,10 +46,14 @@ case class AlternativeNamesConfigProvider(provider: ConfigProvider, options: Seq
 
 object AlternativeNamesConfigProvider {
 
-  def camelToDash(path: String): String =
-    "(\\p{Upper}|\\d+)".r.replaceAllIn(path, m => s"-${m.matched.toLowerCase}").stripPrefix("-")
-
   def originalAndDash(provider: ConfigProvider): AlternativeNamesConfigProvider =
-    AlternativeNamesConfigProvider(provider, Seq(camelToDash))
+    AlternativeNamesConfigProvider(provider, Seq(alternatives.camelToDash))
+
+  object alternatives {
+
+    def camelToDash(path: String): String =
+      "(\\p{Upper}|\\d+)".r.replaceAllIn(path, m => s"-${m.matched.toLowerCase}").stripPrefix("-")
+
+  }
 
 }
