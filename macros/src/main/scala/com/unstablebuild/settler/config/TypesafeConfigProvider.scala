@@ -38,6 +38,8 @@ case class TypesafeConfigProvider(config: Config) extends ConfigProvider {
 
   override def numberSeq(path: String): Seq[Number] = config.getNumberList(path)
 
+  override def obj(path: String): AnyRef = config.getAnyRef(path)
+
   private def toDuration(d: JavaDuration): Duration =
     Duration(d.getNano, TimeUnit.NANOSECONDS)
 

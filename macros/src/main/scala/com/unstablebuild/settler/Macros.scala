@@ -1,7 +1,7 @@
 package com.unstablebuild.settler
 
 import com.unstablebuild.settler.annotation.Key
-import com.unstablebuild.settler.config.ConfigProvider
+import com.unstablebuild.settler.config.{ConfigParser, ConfigProvider}
 import com.unstablebuild.settler.error.SettlerException
 import com.unstablebuild.settler.model.MemorySize
 
@@ -17,6 +17,7 @@ object Macros {
     val tpe = weakTypeOf[T]
     val self = typeOf[Macros.type].decl(TermName("generate")).asMethod
     val error = typeOf[SettlerException]
+    val parser = typeOf[ConfigParser[Any]].typeConstructor.typeSymbol
 
     val definitions = tpe.decls.collect {
       case m: MethodSymbol if m.isAbstract =>
@@ -103,7 +104,7 @@ object Macros {
             q"$self[$t](config.config($conf))"
 
           case t =>
-            throw new Exception(s"Don't know how to handle $t")
+            q"implicitly[$parser[$t]].apply(config.obj($conf))"
         }
 
         q"""def ${m.name.decodedName.toTermName} : ${m.returnType} =

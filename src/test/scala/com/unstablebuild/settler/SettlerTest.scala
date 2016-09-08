@@ -1,11 +1,18 @@
 package com.unstablebuild.settler
 
+import java.io.File
+
 import com.typesafe.config.ConfigFactory
 import com.unstablebuild.settler.annotation.Key
+import com.unstablebuild.settler.config.ConfigParser
 import com.unstablebuild.settler.error.SettlerException
 import org.scalatest.{FlatSpec, MustMatchers}
 
 class SettlerTest extends FlatSpec with MustMatchers {
+
+  implicit val classParser = new ConfigParser[Class[_]] {
+    override def apply(value: AnyRef): Class[_] = Class.forName(value.toString)
+  }
 
   val settings =
     Settler.settings[A](
@@ -16,6 +23,7 @@ class SettlerTest extends FlatSpec with MustMatchers {
             |optIn = "I'm here"
             |b = {
             |  anotherInt = 51
+            |  customType = java.io.File
             |}
             |list = ["a", "b"]
             |set = [1, 2, 3]
@@ -88,6 +96,10 @@ class SettlerTest extends FlatSpec with MustMatchers {
     settings.camelCaseToDashSeparated must equal (67)
   }
 
+  it must "allow custom parsers" in {
+    settings.b.customType must equal (classOf[File])
+  }
+
 }
 
 trait A {
@@ -126,6 +138,8 @@ trait A {
 trait B {
 
   def anotherInt: Int
+
+  def customType: Class[_]
 
 }
 

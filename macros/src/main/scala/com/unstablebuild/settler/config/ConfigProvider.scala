@@ -36,6 +36,8 @@ trait ConfigProvider {
 
   def durationSeq(path: String): Seq[Duration]
 
+  def obj(path: String): AnyRef
+
 }
 
 object ConfigProvider {

@@ -33,6 +33,8 @@ case class AlternativeNamesConfigProvider(provider: ConfigProvider, options: Seq
 
   override def numberSeq(path: String): Seq[Number] = get(provider.numberSeq, path)
 
+  override def obj(path: String): AnyRef = get(provider.obj, path)
+
   @inline
   private[this] def get[T](f: String => T, name: String): T =
     (name #:: options.toStream.map(_.apply(name)))
