@@ -33,6 +33,7 @@ class SettlerTest extends FlatSpec with MustMatchers {
             |]
             |aNumber = 37
             |another-name = 1.23
+            |camel-case-to-dash-separated = 67
           """.stripMargin))
 
   it must "handle integers" in {
@@ -83,6 +84,10 @@ class SettlerTest extends FlatSpec with MustMatchers {
     settings.renamed must equal (1.23)
   }
 
+  it must "try dash separated names" in {
+    settings.camelCaseToDashSeparated must equal (67)
+  }
+
 }
 
 trait A {
@@ -113,6 +118,8 @@ trait A {
 
   @Key(name = "another-name")
   def renamed: Double
+
+  def camelCaseToDashSeparated: Int
 
 }
 
