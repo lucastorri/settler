@@ -90,6 +90,8 @@ val settings = Settler.settings[CustomSettings](
 settings.customType == classOf[java.io.File]
 ```
 
+A few custom parsers are available by importing `com.unstablebuild.settler.parser._`.
+
 
 ### Config vs Settings
 
