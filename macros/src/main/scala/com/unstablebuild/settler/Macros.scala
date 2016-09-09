@@ -1,9 +1,10 @@
 package com.unstablebuild.settler
 
 import com.unstablebuild.settler.annotation.Key
-import com.unstablebuild.settler.config.{ConfigParser, ConfigProvider}
+import com.unstablebuild.settler.config.ConfigProvider
 import com.unstablebuild.settler.error.SettlerException
 import com.unstablebuild.settler.model.MemorySize
+import com.unstablebuild.settler.parser.ConfigParser
 
 import scala.concurrent.duration.Duration
 import scala.language.experimental.macros

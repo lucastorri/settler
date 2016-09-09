@@ -4,8 +4,8 @@ import java.io.File
 
 import com.typesafe.config.ConfigFactory
 import com.unstablebuild.settler.annotation.Key
-import com.unstablebuild.settler.config.ConfigParser
 import com.unstablebuild.settler.error.SettlerException
+import com.unstablebuild.settler.parser.ConfigParser
 import org.scalatest.{FlatSpec, MustMatchers}
 
 class SettlerTest extends FlatSpec with MustMatchers {
