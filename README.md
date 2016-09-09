@@ -54,6 +54,48 @@ val settings = Settler.settings[AppSettings](ConfigFactory.parseFile(myFile))
 It can be used out-of-the-box with [Typesafe's Config](https://github.com/typesafehub/config) or [Java Properties](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html). Additionally, you can implement your own `ConfigProvider` and use whatever source you prefer (custom file formats, databases, Redis, HTTP calls, etc).
 
 
+### Alternative Name
+
+Case necessary, you can modify the key used to retrieve a setting by using the `@Key` annotation as so:
+
+```scala
+trait AlternativeName {
+  @Key(name = "rightName")
+  def wrongName: Int
+}
+```
+
+
+### Custom Types
+
+`settler` supports most of the common Scala types, like `Int`, `String`, `ConfigProvider`, `Duration`, `MemorySize`, plus these same types wrapped on `Seq`, `Set`, and/or `Option`.
+
+Whenever your trait define types that are unknown to the library, it will try to find an implicit implementation of `ConfigParser`. `ConfigParser`s allow the functionallity of the library to be expanded and define custom types.
+
+For example:
+
+```scala
+trait CustomSettings {
+  def customType: Class[_]
+}
+
+implicit val classParser = new ConfigParser[Class[_]] {
+  override def apply(value: AnyRef): Class[_] = 
+    Class.forName(value.toString)
+}
+
+val settings = Settler.settings[CustomSettings](
+	ConfigFactory.parseString("customType = java.io.File"))
+
+settings.customType == classOf[java.io.File]
+```
+
+
+### Config vs Settings
+
+Along the documentation and the code you might see the usage of the words Config and Settings. Although they can broadly be considered synonyms, on the scope of this library Config refers to external libraries, like Typesafe's Config, who provide the mechanism of fetching configuration files and so on. On the other hand, Settings are those same configurations loaded and exposed in a way that makes sense to the application domain.
+
+
 ## Install
 
 To use it with [SBT](http://www.scala-sbt.org/), add the following to your `build.sbt` file:
