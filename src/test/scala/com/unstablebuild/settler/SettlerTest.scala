@@ -16,33 +16,34 @@ class SettlerTest extends FlatSpec with MustMatchers {
 
   val settings =
     Settler.settings[A](
-        ConfigFactory.parseString(
-          """
-            |int = 3
-            |str = "hello"
-            |optIn = "I'm here"
-            |b = {
-            |  anotherInt = 51
-            |  customType = java.io.File
-            |}
-            |list = ["a", "b"]
-            |set = [1, 2, 3]
-            |pairSeq = [
-            |  {
-            |    key = "hey"
-            |    value = 21
-            |  }
-            |]
-            |pairSet = [
-            |  {
-            |    key = "hi"
-            |    value = 31
-            |  }
-            |]
-            |aNumber = 37
-            |anotherName = 1.23
-            |camel-case-to-dash-separated = 67
-          """.stripMargin))
+      ConfigFactory.parseString("""
+        |int = 3
+        |str = "hello"
+        |optIn = "I'm here"
+        |b = {
+        |  anotherInt = 51
+        |  customType = java.io.File
+        |}
+        |list = ["a", "b"]
+        |set = [1, 2, 3]
+        |pairSeq = [
+        |  {
+        |    key = "hey"
+        |    value = 21
+        |  }
+        |]
+        |pairSet = [
+        |  {
+        |    key = "hi"
+        |    value = 31
+        |  }
+        |]
+        |aNumber = 37
+        |anotherName = 1.23
+        |camel-case-to-dash-separated = {
+        |  camel-case-int = 67
+        |}
+        """.stripMargin))
 
   it must "handle integers" in {
     settings.int must be (3)
@@ -93,7 +94,7 @@ class SettlerTest extends FlatSpec with MustMatchers {
   }
 
   it must "try dash separated names" in {
-    settings.camelCaseToDashSeparated must equal (67)
+    settings.camelCaseToDashSeparated.camelCaseInt must equal (67)
   }
 
   it must "allow custom parsers" in {
@@ -131,7 +132,7 @@ trait A {
   @Key(name = "anotherName")
   def renamed: Double
 
-  def camelCaseToDashSeparated: Int
+  def camelCaseToDashSeparated: D
 
 }
 
@@ -148,5 +149,11 @@ trait C {
   def key: String
 
   def value: Int
+
+}
+
+trait D {
+
+  def camelCaseInt: Int
 
 }

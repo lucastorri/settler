@@ -11,7 +11,7 @@ case class AlternativeNamesConfigProvider(provider: ConfigProvider, options: Seq
 
   override def durationSeq(path: String): Seq[Duration] = get(provider.durationSeq, path)
 
-  override def config(path: String): ConfigProvider = get(provider.config, path)
+  override def config(path: String): ConfigProvider = copy(provider = get(provider.config, path))
 
   override def stringSeq(path: String): Seq[String] = get(provider.stringSeq, path)
 
