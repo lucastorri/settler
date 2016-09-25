@@ -8,6 +8,8 @@ import com.unstablebuild.settler.error.SettlerException
 import com.unstablebuild.settler.parser.ConfigParser
 import org.scalatest.{FlatSpec, MustMatchers}
 
+import scala.concurrent.duration._
+
 class SettlerTest extends FlatSpec with MustMatchers {
 
   implicit val classParser = new ConfigParser[Class[_]] {
@@ -40,6 +42,7 @@ class SettlerTest extends FlatSpec with MustMatchers {
         |]
         |aNumber = 37
         |anotherName = 1.23
+        |duration = 10s
         |camel-case-to-dash-separated = {
         |  camel-case-int = 67
         |}
@@ -89,6 +92,10 @@ class SettlerTest extends FlatSpec with MustMatchers {
     }
   }
 
+  it must "convert durations to finite" in {
+    settings.duration must equal(10.seconds)
+  }
+
   it must "allow setting the base name" in {
     settings.renamed must equal (1.23)
   }
@@ -131,6 +138,8 @@ trait A {
 
   @Key(name = "anotherName")
   def renamed: Double
+
+  def duration: FiniteDuration
 
   def camelCaseToDashSeparated: D
 

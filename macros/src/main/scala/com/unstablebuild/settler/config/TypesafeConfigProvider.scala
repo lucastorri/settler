@@ -41,7 +41,7 @@ case class TypesafeConfigProvider(config: Config) extends ConfigProvider {
   override def obj(path: String): AnyRef = config.getAnyRef(path)
 
   private def toDuration(d: JavaDuration): Duration =
-    Duration(d.getNano, TimeUnit.NANOSECONDS)
+    Duration(d.toNanos, TimeUnit.NANOSECONDS)
 
   private def toMemSize(s: ConfigMemorySize): MemorySize =
     MemorySize(s.toBytes)

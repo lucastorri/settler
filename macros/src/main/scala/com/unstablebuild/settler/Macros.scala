@@ -6,7 +6,7 @@ import com.unstablebuild.settler.error.SettlerException
 import com.unstablebuild.settler.model.MemorySize
 import com.unstablebuild.settler.parser.ConfigParser
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.{Duration, FiniteDuration}
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
 
@@ -88,6 +88,13 @@ object Macros {
             q"config.durationSeq($conf)"
           case t if t =:= typeOf[Set[Duration]] =>
             q"config.durationSeq($conf).toSet"
+
+          case t if t =:= typeOf[FiniteDuration] =>
+            q"config.duration($conf).asInstanceOf[${typeOf[FiniteDuration]}]"
+          case t if t =:= typeOf[Seq[FiniteDuration]] =>
+            q"config.durationSeq($conf).map(_.asInstanceOf[${typeOf[FiniteDuration]}])"
+          case t if t =:= typeOf[Set[FiniteDuration]] =>
+            q"config.durationSeq($conf).map(_.asInstanceOf[${typeOf[FiniteDuration]}]).toSet"
 
           case t @ TypeRef(_, _, args) if t <:< typeOf[Option[Any]] =>
             q"if (config.has($conf)) Some(${extract(args.head)}) else None"
