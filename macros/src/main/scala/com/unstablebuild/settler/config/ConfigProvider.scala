@@ -48,4 +48,7 @@ object ConfigProvider {
   implicit def fromConfig(config: Config): ConfigProvider =
     AlternativeNamesConfigProvider.originalAndDash(TypesafeConfigProvider(config))
 
+  def fromEnv(): ConfigProvider =
+    AlternativeNamesConfigProvider.originalAndScreaming(TypesafeConfigProvider(ConfigFactory.systemEnvironment()))
+
 }
