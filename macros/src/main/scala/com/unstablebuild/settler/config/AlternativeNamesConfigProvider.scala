@@ -50,10 +50,16 @@ object AlternativeNamesConfigProvider {
   def originalAndDash(provider: ConfigProvider): AlternativeNamesConfigProvider =
     AlternativeNamesConfigProvider(provider, Seq(alternatives.camelToDash))
 
+  def originalAndScreaming(provider: ConfigProvider): AlternativeNamesConfigProvider =
+    AlternativeNamesConfigProvider(provider, Seq(alternatives.camelToScreaming))
+
   object alternatives {
 
     def camelToDash(path: String): String =
       "(\\p{Upper}|\\d+)".r.replaceAllIn(path, m => s"-${m.matched.toLowerCase}").stripPrefix("-")
+
+    def camelToScreaming(path: String): String =
+      "(\\p{Upper}|\\d+)".r.replaceAllIn(path, m => s"_${m.matched}").stripPrefix("_").toUpperCase
 
   }
 

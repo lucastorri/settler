@@ -14,6 +14,14 @@ class AlternativeNamesConfigProviderTest extends FlatSpec with MustMatchers {
     provider.bool("WithANumber42") must be(true)
   }
 
+  it must "convert camel case names to screaming case" in {
+    val provider =
+      AlternativeNamesConfigProvider.originalAndScreaming(ConfigFactory.parseString("""HELLO_WORLD = true"""))
+
+    provider.bool("helloWorld") must be(true)
+    provider.bool("HelloWorld") must be(true)
+  }
+
   it must "copy the provider for nested values" in {
 
     val provider = AlternativeNamesConfigProvider.originalAndDash(
