@@ -127,6 +127,15 @@ class SettlerTest extends FlatSpec with MustMatchers {
     }
   }
 
+  it must "implement settings from parents" in {
+
+    val settings = Settler.settings[Extended](ConfigFactory.parseString("""
+        |a-string = "hey, ho!"
+      """.stripMargin))
+
+    settings.aString must equal ("hey, ho!")
+  }
+
 }
 
 trait All {
@@ -199,3 +208,5 @@ trait MissingVal {
   val missingSetting: String
 
 }
+
+trait Extended extends Val

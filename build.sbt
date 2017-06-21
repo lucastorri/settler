@@ -11,6 +11,9 @@ lazy val commonSettings = Seq(
     "org.scalatest" %% "scalatest" % "3.0.0" % "test"
   ),
   resolvers ++= Seq(),
+  scalacOptions ++= Seq(
+    "-deprecation"
+  ),
   publishMavenStyle := true,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
