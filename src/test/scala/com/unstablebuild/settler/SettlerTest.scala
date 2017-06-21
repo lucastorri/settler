@@ -12,12 +12,12 @@ import scala.concurrent.duration._
 
 class SettlerTest extends FlatSpec with MustMatchers {
 
-  implicit val classParser = new ConfigParser[Class[_]] {
-    override def apply(value: AnyRef): Class[_] = Class.forName(value.toString)
-  }
+   implicit val classParser = new ConfigParser[Class[_]] {
+      override def apply(value: AnyRef): Class[_] = Class.forName(value.toString)
+    }
 
   val settings =
-    Settler.settings[A](
+    Settler.settings[All](
       ConfigFactory.parseString("""
         |int = 3
         |str = "hello"
@@ -88,7 +88,7 @@ class SettlerTest extends FlatSpec with MustMatchers {
 
   it must "throw an exception if type doesn't match the interface" in {
     a[SettlerException] must be thrownBy {
-      println(settings.aNumber)
+      settings.aNumber
     }
   }
 
@@ -108,15 +108,34 @@ class SettlerTest extends FlatSpec with MustMatchers {
     settings.b.customType must equal (classOf[File])
   }
 
+  it must "lazy load def settings" in {
+    a[SettlerException] must be thrownBy {
+      settings.nonExisting
+    }
+  }
+
+  it must "eagerly load val settings" in {
+    val valueSetting = Settler.settings[Val](ConfigFactory.parseString(
+      """
+        |a-string = "hey, ho!"
+      """.stripMargin))
+
+    valueSetting.aString must equal ("hey, ho!")
+
+    a[SettlerException] must be thrownBy {
+      Settler.settings[MissingVal](ConfigFactory.empty)
+    }
+  }
+
 }
 
-trait A {
+trait All {
 
   def int: Int
 
   def str: String
 
-  def b: B
+  def b: Inner
 
   def optIn: Option[String]
 
@@ -130,9 +149,9 @@ trait A {
 
   def optOutOrElse = optOut.getOrElse("default")
 
-  def pairSeq: Seq[C]
+  def pairSeq: Seq[Many]
 
-  def pairSet: Set[C]
+  def pairSet: Set[Many]
 
   def aNumber: Boolean
 
@@ -141,11 +160,13 @@ trait A {
 
   def duration: FiniteDuration
 
-  def camelCaseToDashSeparated: D
+  def camelCaseToDashSeparated: AlternateNaming
+
+  def nonExisting: String
 
 }
 
-trait B {
+trait Inner {
 
   def anotherInt: Int
 
@@ -153,7 +174,7 @@ trait B {
 
 }
 
-trait C {
+trait Many {
 
   def key: String
 
@@ -161,8 +182,20 @@ trait C {
 
 }
 
-trait D {
+trait AlternateNaming {
 
   def camelCaseInt: Int
+
+}
+
+trait Val {
+
+  val aString: String
+
+}
+
+trait MissingVal {
+
+  val missingSetting: String
 
 }
