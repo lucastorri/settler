@@ -12,13 +12,12 @@ import scala.concurrent.duration._
 
 class SettlerTest extends FlatSpec with MustMatchers {
 
-   implicit val classParser = new ConfigParser[Class[_]] {
-      override def apply(value: AnyRef): Class[_] = Class.forName(value.toString)
-    }
+  implicit val classParser = new ConfigParser[Class[_]] {
+    override def apply(value: AnyRef): Class[_] = Class.forName(value.toString)
+  }
 
   val settings =
-    Settler.settings[All](
-      ConfigFactory.parseString("""
+    Settler.settings[All](ConfigFactory.parseString("""
         |int = 3
         |str = "hello"
         |optIn = "I'm here"
@@ -49,41 +48,41 @@ class SettlerTest extends FlatSpec with MustMatchers {
         """.stripMargin))
 
   it must "handle integers" in {
-    settings.int must be (3)
+    settings.int must be(3)
   }
 
   it must "handle strings" in {
-    settings.str must equal ("hello")
+    settings.str must equal("hello")
   }
 
   it must "handle optional values" in {
-    settings.optIn must equal (Some("I'm here"))
-    settings.optOut must be (None)
+    settings.optIn must equal(Some("I'm here"))
+    settings.optOut must be(None)
   }
 
   it must "handle other settings" in {
-    settings.b.anotherInt must be (51)
+    settings.b.anotherInt must be(51)
   }
 
   it must "handle lists" in {
-    settings.list must equal (Seq("a", "b"))
+    settings.list must equal(Seq("a", "b"))
   }
 
   it must "handle sets" in {
-    settings.set must equal (Set(1, 2, 3))
+    settings.set must equal(Set(1, 2, 3))
   }
 
   it must "allow implemented method" in {
-    settings.optInOrElse must equal ("I'm here")
-    settings.optOutOrElse must equal ("default")
+    settings.optInOrElse must equal("I'm here")
+    settings.optOutOrElse must equal("default")
   }
 
   it must "handle settings lists" in {
-    settings.pairSeq.map(p => p.key -> p.value) must equal (Seq("hey" -> 21))
+    settings.pairSeq.map(p => p.key -> p.value) must equal(Seq("hey" -> 21))
   }
 
   it must "handle settings sets" in {
-    settings.pairSet.map(p => p.key -> p.value) must equal (Set("hi" -> 31))
+    settings.pairSet.map(p => p.key -> p.value) must equal(Set("hi" -> 31))
   }
 
   it must "throw an exception if type doesn't match the interface" in {
@@ -97,15 +96,15 @@ class SettlerTest extends FlatSpec with MustMatchers {
   }
 
   it must "allow setting the base name" in {
-    settings.renamed must equal (1.23)
+    settings.renamed must equal(1.23)
   }
 
   it must "try dash separated names" in {
-    settings.camelCaseToDashSeparated.camelCaseInt must equal (67)
+    settings.camelCaseToDashSeparated.camelCaseInt must equal(67)
   }
 
   it must "allow custom parsers" in {
-    settings.b.customType must equal (classOf[File])
+    settings.b.customType must equal(classOf[File])
   }
 
   it must "lazy load def settings" in {
@@ -115,12 +114,11 @@ class SettlerTest extends FlatSpec with MustMatchers {
   }
 
   it must "eagerly load val settings" in {
-    val valueSetting = Settler.settings[Val](ConfigFactory.parseString(
-      """
+    val valueSetting = Settler.settings[Val](ConfigFactory.parseString("""
         |a-string = "hey, ho!"
       """.stripMargin))
 
-    valueSetting.aString must equal ("hey, ho!")
+    valueSetting.aString must equal("hey, ho!")
 
     a[SettlerException] must be thrownBy {
       Settler.settings[MissingVal](ConfigFactory.empty)
@@ -133,7 +131,7 @@ class SettlerTest extends FlatSpec with MustMatchers {
         |a-string = "hey, ho!"
       """.stripMargin))
 
-    settings.aString must equal ("hey, ho!")
+    settings.aString must equal("hey, ho!")
   }
 
 }

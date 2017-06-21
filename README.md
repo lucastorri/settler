@@ -116,3 +116,11 @@ libraryDependencies += "com.unstablebuild" %% "settler" % "0.4.3"
 ./sbt publishSigned macros/publishSigned
 ./sbt sonatypeReleaseAll
 ```
+
+## Code Format
+
+This project uses [Scalafmt](http://scalameta.org/scalafmt/) for code formatting. This is done with the help of [neo-sbt-scalafmt](https://github.com/lucidsoftware/neo-sbt-scalafmt) SBT plugin:
+
+```bash
+./sbt sbt:scalafmt scalafmt test:scalafmt macros/scalafmt macros/test:scalafmt
+```

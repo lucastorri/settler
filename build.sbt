@@ -7,18 +7,14 @@ lazy val commonSettings = Seq(
   homepage := Some(url("https://github.com/lucastorri/settler")),
   organizationHomepage := Some(url("http://unstablebuild.com")),
   licenses := Seq("MIT License" -> url("https://opensource.org/licenses/MIT")),
-  libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "3.0.0" % "test"
-  ),
+  libraryDependencies ++= Seq("org.scalatest" %% "scalatest" % "3.0.0" % "test"),
   resolvers ++= Seq(),
-  scalacOptions ++= Seq(
-    "-deprecation"
-  ),
+  scalacOptions ++= Seq("-deprecation"),
   publishMavenStyle := true,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
     if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
-    else Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+    else Some("releases" at nexus + "service/local/staging/deploy/maven2")
   },
   publishArtifact in Test := false,
   pomIncludeRepository := (_ => false),
@@ -36,14 +32,14 @@ lazy val commonSettings = Seq(
     </developers>
 )
 
-lazy val root = project.in(file("."))
+lazy val root = project
+  .in(file("."))
   .settings(commonSettings: _*)
   .dependsOn(macros)
-  .settings(
-    name := "settler"
-  )
+  .settings(name := "settler")
 
-lazy val macros = project.in(file("macros"))
+lazy val macros = project
+  .in(file("macros"))
   .settings(commonSettings: _*)
   .settings(
     name := "settler-macros",

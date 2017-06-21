@@ -5,7 +5,8 @@ import com.unstablebuild.settler.model.MemorySize
 
 import scala.concurrent.duration.Duration
 
-case class AlternativeNamesConfigProvider(provider: ConfigProvider, options: Seq[String => String]) extends ConfigProvider {
+case class AlternativeNamesConfigProvider(provider: ConfigProvider, options: Seq[String => String])
+    extends ConfigProvider {
 
   override def has(path: String): Boolean = provider.has(path)
 
