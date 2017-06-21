@@ -26,7 +26,8 @@ case class TypesafeConfigProvider(config: Config) extends ConfigProvider {
 
   override def number(path: String): Number = config.getNumber(path)
 
-  override def configSeq(path: String): Seq[ConfigProvider] = config.getConfigList(path).asScala.map(TypesafeConfigProvider)
+  override def configSeq(path: String): Seq[ConfigProvider] =
+    config.getConfigList(path).asScala.map(TypesafeConfigProvider)
 
   override def durationSeq(path: String): Seq[Duration] = config.getDurationList(path).asScala.map(toDuration)
 

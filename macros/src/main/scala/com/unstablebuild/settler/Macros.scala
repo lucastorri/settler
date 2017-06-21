@@ -24,14 +24,14 @@ object Macros {
 
     val definitions = declarations.collect {
       case m: TermSymbol if m.isAbstract =>
-
-        def conf = m.annotations
-          .find(_.tree.tpe =:= typeOf[Key])
-          .map(_.tree)
-          .collectFirst {
-            case q"new $_(name = $name)" => name.toString
-          }
-          .getOrElse(m.asMethod.name.toString)
+        def conf =
+          m.annotations
+            .find(_.tree.tpe =:= typeOf[Key])
+            .map(_.tree)
+            .collectFirst {
+              case q"new $_(name = $name)" => name.toString
+            }
+            .getOrElse(m.asMethod.name.toString)
 
         def extract(base: Type): Tree = base match {
 
@@ -108,7 +108,8 @@ object Macros {
 
           case t @ TypeRef(_, _, args) if t <:< typeOf[Seq[Any]] && args.head.typeSymbol.isAbstract =>
             q"config.configSeq($conf).map(c => com.unstablebuild.settler.Macros.generate[${args.head}](c))"
-          case t @ TypeRef(_, _, args) if t.typeSymbol == typeOf[Set[Any]].typeSymbol && args.head.typeSymbol.isAbstract =>
+          case t @ TypeRef(_, _, args)
+              if t.typeSymbol == typeOf[Set[Any]].typeSymbol && args.head.typeSymbol.isAbstract =>
             q"config.configSeq($conf).map(c => com.unstablebuild.settler.Macros.generate[${args.head}](c)).toSet"
           case t if t.typeSymbol.isAbstract =>
             q"com.unstablebuild.settler.Macros.generate[$t](config.config($conf))"
@@ -130,8 +131,7 @@ object Macros {
         c.parse(s"${showDecl(m)} = ${showCode(body)}")
     }
 
-    c.Expr[T](
-      q"""{
+    c.Expr[T](q"""{
         new $tpe {
 
           private val config = $config
