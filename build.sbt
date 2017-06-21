@@ -52,3 +52,5 @@ lazy val macros = project.in(file("macros"))
       "org.scala-lang" % "scala-reflect" % scalaVersion.value
     )
   )
+
+enablePlugins(com.lucidchart.sbt.scalafmt.ScalafmtPlugin)
