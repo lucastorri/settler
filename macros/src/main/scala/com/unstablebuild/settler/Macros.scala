@@ -16,7 +16,6 @@ object Macros {
     import c.universe._
 
     val tpe = weakTypeOf[T]
-    val self = typeOf[Macros.type].decl(TermName("generate")).asMethod
     val error = typeOf[SettlerException]
     val parser = typeOf[ConfigParser[Any]].typeConstructor.typeSymbol
 
@@ -105,23 +104,27 @@ object Macros {
             q"config.configSeq($conf)"
 
           case t @ TypeRef(_, _, args) if t <:< typeOf[Seq[Any]] && args.head.typeSymbol.isAbstract =>
-            q"config.configSeq($conf).map(c => $self[${args.head}](c))"
+            q"config.configSeq($conf).map(c => com.unstablebuild.settler.Macros.generate[${args.head}](c))"
           case t @ TypeRef(_, _, args) if t.typeSymbol == typeOf[Set[Any]].typeSymbol && args.head.typeSymbol.isAbstract =>
-            q"config.configSeq($conf).map(c => $self[${args.head}](c)).toSet"
+            q"config.configSeq($conf).map(c => com.unstablebuild.settler.Macros.generate[${args.head}](c)).toSet"
           case t if t.typeSymbol.isAbstract =>
-            q"$self[$t](config.config($conf))"
+            q"com.unstablebuild.settler.Macros.generate[$t](config.config($conf))"
 
           case t =>
             q"implicitly[$parser[$t]].apply(config.obj($conf))"
         }
 
-        q"""def ${m.name.decodedName.toTermName} : ${m.returnType} =
+        val returnType = m.typeSignature.finalResultType
+
+        val body = q"""
           try {
-            ${c.Expr(extract(m.returnType))}
+            ${c.Expr(extract(returnType))}
           } catch {
             case scala.util.control.NonFatal(e) => throw new $error(cause = e)
           }
         """
+
+        c.parse(s"${showDecl(m)} = ${showCode(body)}")
     }
 
     c.Expr[T](
