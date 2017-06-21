@@ -19,8 +19,11 @@ object Macros {
     val error = typeOf[SettlerException]
     val parser = typeOf[ConfigParser[Any]].typeConstructor.typeSymbol
 
-    val definitions = tpe.decls.collect {
-      case m: MethodSymbol if m.isAbstract =>
+    // Drop `Object` and `Any`
+    val declarations = tpe.baseClasses.dropRight(2).flatMap(_.info.decls)
+
+    val definitions = declarations.collect {
+      case m: TermSymbol if m.isAbstract =>
 
         def conf = m.annotations
           .find(_.tree.tpe =:= typeOf[Key])
