@@ -112,7 +112,7 @@ libraryDependencies += "com.unstablebuild" %% "settler" % "0.4.3"
 ## Release
 
 ```bash
-./sbt test
+./sbt test macros/test
 ./sbt publishSigned macros/publishSigned
 ./sbt sonatypeReleaseAll
 ```
