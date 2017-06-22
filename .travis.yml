@@ -1,5 +1,7 @@
 language: scala
 scala:
   - 2.12.0
+jdk:
+  - oraclejdk8
 script:
   - sbt sbt:scalafmt::test scalafmt::test test:scalafmt::test macros/scalafmt::test macros/test:scalafmt::test macros/test test
