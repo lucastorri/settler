@@ -54,6 +54,21 @@ val settings = Settler.settings[AppSettings](ConfigFactory.parseFile(myFile))
 It can be used out-of-the-box with [Typesafe's Config](https://github.com/typesafehub/config) or [Java Properties](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html). Additionally, you can implement your own `ConfigProvider` and use whatever source you prefer (custom file formats, databases, Redis, HTTP calls, etc).
 
 
+### Environment Variables Provider
+
+````scala
+trait Aws {
+  @Key(name = "AWS_SECRET_ACCESS_KEY")
+  def key: String
+  def awsSecretAccessKey: String
+}
+
+val s = Settler.settings[Aws](ConfigProvider.fromEnv())
+
+println(s.key == s.awsSecretAccessKey)
+````
+
+
 ### Alternative Name
 
 Case necessary, you can modify the key used to retrieve a setting by using the `@Key` annotation as so:
