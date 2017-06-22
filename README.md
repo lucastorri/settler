@@ -66,6 +66,18 @@ trait AlternativeName {
 ```
 
 
+### Lazy vs Eagerly Loading
+ 
+Depending how your flag is declared, it might be lazy or eagerly loaded. As an example consider the following example:
+
+```scala
+trait Settings {
+  val eagerlyLoaded: String
+  def lazyLoaded: String
+}
+```
+
+
 ### Custom Types
 
 `settler` supports most of the common Scala types, like `Int`, `String`, `ConfigProvider`, `Duration`, `MemorySize`, plus these same types wrapped on `Seq`, `Set`, and/or `Option`.
