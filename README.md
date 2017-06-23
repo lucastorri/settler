@@ -132,15 +132,15 @@ To use it with [SBT](http://www.scala-sbt.org/), add the following to your `buil
 ```scala
 resolvers += Resolver.sonatypeRepo("public")
 
-libraryDependencies += "com.unstablebuild" %% "settler" % "0.4.3"
+libraryDependencies += "com.unstablebuild" %% "settler" % "1.0.0"
 ```
 
 
 ## Release
 
 ```bash
-./sbt test macros/test
-./sbt publishSigned macros/publishSigned
+./sbt +test +macros/test
+./sbt +publishSigned +macros/publishSigned
 ./sbt sonatypeReleaseAll
 ```
 
